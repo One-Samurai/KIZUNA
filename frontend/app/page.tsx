@@ -32,13 +32,13 @@ export default function Home() {
   return (
     <div className="space-y-24">
       {/* HERO */}
-      <section className="grid items-end gap-10 lg:grid-cols-[1.35fr_1fr]">
-        <div className="space-y-7">
+      <section className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
+        <div className="min-w-0 space-y-7">
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-kin/60" />
             <p className="eyebrow">絆 · Honor Ledger · ONE Samurai</p>
           </div>
-          <h1 className="h-display text-[80px] leading-[0.92] sm:text-[104px]">
+          <h1 className="h-display text-[56px] leading-[0.94] sm:text-[68px] xl:text-[84px]">
             Soulbound<br />
             <span className="text-kin">proof of fandom.</span>
           </h1>
@@ -126,11 +126,17 @@ function FeaturedMatch({ match }: { match: Match }) {
           <p className="eyebrow">▸ Main event</p>
           <span className="pill-red">● Live soon</span>
         </div>
-        <h3 className="h-display mt-5 text-3xl leading-[0.95]">
-          {match.fighterA}
-          <span className="mx-2.5 text-muted">vs</span>
-          {match.fighterB}
-        </h3>
+        <div className="relative mt-5">
+          <h3 className="h-display text-2xl leading-[1.05] break-words text-left">
+            {match.fighterA}
+          </h3>
+          <span className="my-1.5 block font-mono text-xs uppercase tracking-[0.35em] text-vermillion/80 text-center">
+            — vs —
+          </span>
+          <h3 className="h-display text-2xl leading-[1.05] break-words text-right">
+            {match.fighterB}
+          </h3>
+        </div>
         <div className="mt-6 grid grid-cols-4 gap-2">
           <Tick label="Days" v={c.d} />
           <Tick label="Hrs" v={c.h} />
