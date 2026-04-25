@@ -38,9 +38,17 @@
 
 > "Here's Alice. She's a casual fan. She clicks Google, picks her account — and she's on-chain. No keys, no jargon. Behind the scenes, Enoki derives her Sui address from a zero-knowledge proof of her OAuth token. Her email never touches the chain."
 
-`[Click "Mint Passport" → tx confirms → identity card flips on Passport page]`
+`[Click "Mint Passport" → tx confirms → identity card appears on Passport page]`
 
 > "She mints her passport. Notice the parchment card — that's her Honor Ledger. Rookie tier, zero XP, holder address right there."
+
+`[Click the card — it flips over revealing the holder's avatar portrait]`
+
+> "Tap it — the passport flips. Front shows the tier artwork; back carries her personal avatar and the full on-chain identity. Today we ship tier-based preset portraits; next iteration wires this to an AI fighter-portrait generator — prompt goes in, the image is stored on **Walrus**, Sui's native decentralised blob storage, and the blob ID lives on the passport itself. Fully on-chain avatar, no centralised CDN."
+
+`[Click the tier preview pills below the card, cycling Rookie → Samurai → Ronin → Shogun → Legend]`
+
+> "Different tiers unlock different fighter artwork — from rookie recruit all the way to legend."
 
 `[Navigate to Pick'em / Fight Card → open match → vote Team A]`
 

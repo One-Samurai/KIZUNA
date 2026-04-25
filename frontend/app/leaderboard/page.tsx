@@ -103,7 +103,7 @@ export default function LeaderboardPage() {
                         t === 4 ? 'bg-vermillion' :
                         t === 3 ? 'bg-kin' :
                         t === 2 ? 'bg-kin/70' :
-                        t === 1 ? 'bg-ai/70' : 'bg-muted/50'
+                        t === 1 ? 'bg-sui/70' : 'bg-muted/50'
                       }`}
                       style={{ width: `${pct}%` }}
                     />

@@ -4,9 +4,10 @@
 
 html, body {
   background:
-    radial-gradient(1100px 540px at 88% -10%, rgba(230,57,70,0.10), transparent 60%),
-    radial-gradient(900px 520px at -10% 30%, rgba(201,169,97,0.08), transparent 65%),
-    linear-gradient(180deg, #0d0c12 0%, #100f17 100%);
+    radial-gradient(1100px 540px at 88% -10%, rgba(255,59,59,0.12), transparent 60%),
+    radial-gradient(900px 520px at -10% 30%, rgba(76,162,255,0.12), transparent 65%),
+    radial-gradient(700px 400px at 50% 110%, rgba(42,117,211,0.10), transparent 70%),
+    linear-gradient(180deg, #08090f 0%, #0b0d16 100%);
   color: #f0ece1;
   font-feature-settings: 'ss01', 'cv11';
 }
@@ -29,7 +30,7 @@ main, nav, footer { position: relative; z-index: 1; }
 
 @layer components {
   .eyebrow {
-    @apply text-[11px] font-mono uppercase tracking-[0.22em] text-kin;
+    @apply text-[11px] font-mono uppercase tracking-[0.22em] text-sui;
   }
   .eyebrow-muted {
     @apply text-[11px] font-mono uppercase tracking-[0.22em] text-muted;
@@ -49,20 +50,51 @@ main, nav, footer { position: relative; z-index: 1; }
     @apply inline-flex items-center gap-1.5 rounded-sm px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-[0.18em];
   }
   .pill-kin    { @apply pill border border-kin/60 bg-kin/10 text-kin; }
+  .pill-sui    { @apply pill border border-sui/60 bg-sui/10 text-sui; }
   .pill-red    { @apply pill border border-vermillion/70 bg-vermillion/10 text-vermillion; }
   .pill-sage   { @apply pill border border-sage/60 bg-sage/10 text-sage; }
   .pill-ghost  { @apply pill border border-line text-muted; }
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-sm bg-vermillion px-6 py-3 text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-ink transition hover:bg-vermillion/90 disabled:opacity-40;
+    @apply inline-flex items-center justify-center rounded-sm bg-vermillion px-6 py-3 text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-ink transition hover:bg-vermillion2 disabled:opacity-40;
+  }
+  .btn-sui {
+    @apply inline-flex items-center justify-center rounded-sm bg-sui px-6 py-3 text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-paper transition hover:bg-sui2 disabled:opacity-40;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-sm border border-ink/30 bg-transparent px-6 py-3 text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-ink transition hover:border-ink hover:bg-ink/5 disabled:opacity-40;
+    @apply inline-flex items-center justify-center rounded-sm border border-ink/30 bg-transparent px-6 py-3 text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-ink transition hover:border-sui hover:text-sui hover:bg-sui/5 disabled:opacity-40;
   }
   .input {
-    @apply w-full rounded-sm border border-line bg-paper2 px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:border-kin focus:outline-none;
+    @apply w-full rounded-sm border border-line bg-paper2 px-3 py-2.5 text-sm text-ink placeholder:text-muted focus:border-sui focus:outline-none;
   }
   .divider-kin {
     background: linear-gradient(90deg, transparent, rgba(201,169,97,0.4), transparent);
     height: 1px;
   }
+  .divider-sui {
+    background: linear-gradient(90deg, transparent, rgba(76,162,255,0.5), transparent);
+    height: 1px;
+  }
+}
+
+/* 3D flip card — inspired by Ichimon SBTCard */
+.flip-wrap {
+  perspective: 1400px;
+}
+.flip-inner {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.flip-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
 }

@@ -1,16 +1,30 @@
-# KIZUNA: Fan Identity Passport (絆：全渠道粉絲通行證)
+# KIZUNA: Fan Identity Passport
 
-## 專案概述 (Overview)
-**KIZUNA (絆)** 象徵著粉絲與選手間不可磨滅的羈絆。它是建立於 Sui Network 上的 Fan Passport 2.0，是一個跨平台、可成長的 Web3 動態身份憑證。KIZUNA 將粉絲的參與熱情轉化為專屬的鏈上資產，徹底解決 ONE Championship 在日本市場缺乏直接掌握粉絲數據的痛點。
+## Introduction
+**KIZUNA** characterises the indestructible bond between fans and fighters. Built on the Sui Network, it represents Fan Passport 2.0—a cross-platform, evolvable Web3 dynamic identity credential. KIZUNA transforms fan engagement into exclusive on-chain assets, thoroughly resolving ONE Championship's pain point of lacking direct fan data in the Japanese market.
 
-## 核心痛點解決
-目前 ONE 在日本的轉播依賴 U-NEXT，導致官方無法直接觸及粉絲並建立長期忠誠度。KIZUNA 透過無金流的預測任務與實地打卡，讓粉絲累積「名譽經驗值」(Honor XP)，不僅合乎日本法規，更強化了本土粉絲的認同感。
+## Pain Points Solved
+Currently, ONE Championship's broadcasting in Japan relies heavily on U-NEXT, resulting in the official organisation being unable to directly reach fans and build long-term loyalty. KIZUNA introduces a frictionless, cashless prediction mechanism (Pick'em) and location-based check-ins, allowing fans to accumulate "Honor XP". This approach not only fully complies with Japanese regulations but also significantly strengthens the sense of belonging amongst local fans.
 
-## 為何選擇 Sui Network
-*   **跨平台資產自主權**：KIZUNA 是粉絲真正擁有的鏈上資產，能無縫打通 U-NEXT、ONE 官方 App 及線下道館，打破 Web2 時代的會員數據孤島。
-*   **無摩擦登入體驗 (zkLogin)**：透過 Sui zkLogin，日本粉絲只需使用 Google 或 LINE 等社交帳號即可無痕註冊，完全免除學習錢包私鑰的巨大門檻。
-*   **動態進化能力 (Dynamic NFT)**：粉絲的打卡、預測戰績能即時更新於 KIZUNA 通行證的屬性上，讓資產隨著粉絲的參與度「進化」，解鎖更多專屬權益。
+## System Architecture
+The platform is designed with a modern, decentralised architecture leveraging the Sui Network:
+*   **Frontend**: Next.js App Router for a seamless, highly responsive user interface, featuring native SVG integrations for high-quality branding.
+*   **Authentication**: Sui zkLogin facilitates frictionless onboarding. Fans simply log in using familiar social accounts (Google, LINE), completely removing the hurdle of managing wallet private keys.
+*   **Smart Contracts**: Move smart contracts on Sui manage the creation, evolution, and verification of the Dynamic NFTs (Soulbound Tokens) representing the fan passports.
 
-## 目標對象與 GTM 策略
-*   **對象**：ONE Championship 日本廣大粉絲群體。
-*   **策略**：於 U-NEXT 轉播頁面或實體賽事現場發放免費 QR Code 供粉絲領取，結合「無金流 Pick'em 預測」模組，作為本屆 Hackathon 最具商業衝擊力的 MVP 主打方案。
+## Core Features
+*   **Absolute Data Ownership**: All interaction records and Honor XP are inextricably linked to the fan's on-chain wallet (or zkLogin account), ensuring the data genuinely belongs to them. Even if a specific platform ceases operations, the assets and history persist indefinitely on the blockchain, eliminating the risk of platform lock-in and long-term operational dilemmas.
+*   **Cross-Platform Asset Autonomy**: KIZUNA seamlessly bridges U-NEXT, the official ONE App, and physical dojos, shattering the data silos of the Web2 era.
+*   **Frictionless Onboarding (zkLogin)**: Zero crypto knowledge required. Users can dive straight into the ecosystem using their existing Web2 social identities.
+*   **Dynamic Evolution (Dynamic NFT)**: A fan's check-ins and prediction records are updated in real-time on their KIZUNA passport attributes. The asset "evolves" in tandem with the fan's engagement, unlocking exclusive privileges.
+*   **Cashless Pick'em Predictions**: A legally compliant prediction module that gamifies the fan experience without involving real-money gambling, accumulating non-transferable Honor XP.
+
+## Roadmap
+
+*   **AI-Generated Fighter Portraits**: The passport card currently ships with tier-based preset portraits (Rookie / Samurai / Ronin / Shogun / Legend) and a flippable back face embedding the holder's personal avatar. The next iteration integrates a generative-image pipeline (e.g. FAL flux-schnell / Replicate SDXL) prompted by tier, streak and fighter affiliation. Generated portraits are persisted to **Walrus**, Sui's native decentralised blob storage, and the `blob_id` is written back to the Passport object — giving every fan a fully on-chain, non-transferable avatar with zero reliance on centralised CDNs.
+*   **Dynamic Tier Artwork**: Tier upgrades trigger a fresh portrait generation, so the passport literally evolves as the fan climbs from Rookie to Legend.
+*   **Stadium Check-ins & Merch Gating**: Physical event attendance and tier-gated merch drops, all verifiable against the same passport.
+
+## Target Audience & Strategy
+*   **Target Audience**: The expansive fan base of ONE Championship in Japan.
+*   **Go-To-Market Strategy**: Distributing free QR codes on U-NEXT broadcasting pages and at physical event venues for fans to claim their passports. This, combined with the cashless Pick'em prediction module, serves as the most commercially impactful MVP for the hackathon.

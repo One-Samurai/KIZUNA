@@ -47,8 +47,8 @@ export default function PickemPage() {
       </header>
 
       {!passport && (
-        <div className="card border-l-2 border-l-kin p-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-kin">▸ Action required</p>
+        <div className="card border-l-2 border-l-vermillion p-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-vermillion">▸ Action required</p>
           <p className="mt-1 text-sm text-ink">
             You need a pass to cast. Visit <a href="/admin" className="underline">/admin</a> to mint one (if you hold MintCap).
           </p>
@@ -79,7 +79,7 @@ function FilterTab({ label, active, onClick }: { label: string; active: boolean;
     <button
       onClick={onClick}
       className={`rounded-sm px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.22em] transition ${
-        active ? 'border border-kin/60 bg-kin/10 text-kin' : 'border border-line bg-paper2 text-muted hover:text-ink'
+        active ? 'border border-sui/60 bg-sui/10 text-sui' : 'border border-line bg-paper2 text-muted hover:text-ink'
       }`}
     >
       {label}
@@ -212,7 +212,7 @@ function MatchCard({
         <div className="mt-3 min-h-[18px] space-y-1">
           {isPending && <p className="font-mono text-[10px] text-muted">submitting…</p>}
           {voted && !isPending && !claimed && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-kin">✓ pick recorded on-chain</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-sui">✓ pick recorded on-chain</p>
           )}
           {err && <p className="text-sm text-vermillion">{err}</p>}
         </div>
@@ -236,8 +236,8 @@ function PickButton({
       onClick={onClick}
       className={`group rounded-sm border px-4 py-3 text-left transition disabled:opacity-40 ${
         picked
-          ? 'border-kin bg-kin/15 text-kin'
-          : 'border-line bg-paper2 text-ink hover:border-kin/60 hover:bg-paper/60'
+          ? 'border-sui bg-sui/15 text-sui'
+          : 'border-line bg-paper2 text-ink hover:border-sui/60 hover:bg-paper/60'
       }`}
     >
       <p className="font-mono text-[9px] uppercase tracking-[0.22em] opacity-70">▸ Pick</p>

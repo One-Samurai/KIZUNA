@@ -209,6 +209,6 @@ function Submit({ disabled, label }: { disabled: boolean; label: string }) {
 
 function Feedback({ err, ok }: { err: string | null; ok: string | null }) {
   if (err) return <p className="text-sm text-vermillion">{err}</p>;
-  if (ok) return <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-kin">✓ ok · {ok.slice(0, 14)}…</p>;
+  if (ok) return <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-sui">✓ ok · {ok.slice(0, 14)}…</p>;
   return null;
 }

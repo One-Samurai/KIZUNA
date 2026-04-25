@@ -90,7 +90,7 @@ export default function Home() {
             </div>
             <h2 className="h-display mt-3 text-4xl">Open bouts</h2>
           </div>
-          <Link href="/pickem" className="font-mono text-[11px] uppercase tracking-[0.22em] text-kin hover:text-ink">
+          <Link href="/pickem" className="font-mono text-[11px] uppercase tracking-[0.22em] text-sui hover:text-ink">
             All picks →
           </Link>
         </div>
@@ -165,7 +165,7 @@ function MatchCardMini({ match }: { match: Match }) {
   return (
     <Link
       href="/pickem"
-      className="card group relative block p-5 transition hover:border-kin/40 hover:shadow-cardLg"
+      className="card group relative block p-5 transition hover:border-sui/40 hover:shadow-cardLg"
     >
       <div className="flex items-center justify-between">
         <span className={locked ? 'pill-red' : 'pill-kin'}>

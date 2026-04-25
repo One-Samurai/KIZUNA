@@ -12,7 +12,7 @@ export default {
         line: 'rgba(200,220,255,0.10)',
         // text
         ink: '#f5f1e6',           // primary text on dark
-        muted: '#aab3c5',         // cool-tinted muted to match blue base
+        muted: '#9a9488',         // neutral warm-gray (doesn't compete with accents)
         // brand accents — aligned with KIZUNA logo
         vermillion: '#ff3b3b',    // Samurai Red (ONE Samurai primary CTA)
         vermillion2: '#b90000',   // Samurai Red deep (hover/shadow)
@@ -34,7 +34,8 @@ export default {
       boxShadow: {
         card: '0 1px 2px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.35)',
         cardLg: '0 2px 4px rgba(0,0,0,0.45), 0 32px 64px rgba(0,0,0,0.45)',
-        glow: '0 0 0 1px rgba(201,169,97,0.3), 0 8px 32px rgba(201,169,97,0.12)',
+        glow: '0 0 0 1px rgba(76,162,255,0.35), 0 8px 32px rgba(76,162,255,0.18)',
+        glowRed: '0 0 0 1px rgba(255,59,59,0.35), 0 8px 32px rgba(255,59,59,0.20)',
       },
       borderRadius: {
         card: '4px',
