@@ -1,0 +1,11 @@
+{
+  "name": "kizuna-fan-passport",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["frontend", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev -w frontend",
+    "build": "npm run build -w frontend",
+    "typecheck": "npm run typecheck -w frontend"
+  }
+}

@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant U as User (zkLogin)
+    participant F as Frontend (Next.js + dapp-kit)
+    participant S as Sui Testnet
+    participant A as Admin
+
+    A->>S: create_match(AdminCap, fighter_a, fighter_b, lock_ms)
+    S-->>F: MatchCreated event
+    U->>F: Google OAuth (zkLogin)
+    F->>S: mint(MintCap, user_addr) [sponsored]
+    S-->>U: Passport (owned, soulbound)
+    U->>F: Vote fighter A
+    F->>S: vote(match, 0, &passport, clock)
+    S-->>F: VoteCast event
+    A->>S: settle(AdminCap, match, 0)
+    S-->>F: MatchSettled event
+    F->>U: Show Claim XP button
+    U->>F: Click Claim
+    F->>S: claim_xp(match, &mut passport)
+    S-->>F: XpClaimed event
+    F-->>U: Tier-up animation

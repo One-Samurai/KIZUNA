@@ -1,0 +1,17 @@
+{
+  "network": "testnet",
+  "deployedAt": "2026-04-25",
+  "deployer": "0x1509b5fdf09296b2cf749a710e36da06f5693ccd5b2144ad643b3a895abcbc4c",
+  "publishDigest": "5AUTUi5Cz5E2xy8DgWEcbkgXGCArtGNvF6jwysPGyRSy",
+  "packageId": "0x050064dae220d008d39bfab69d23c3b47c554fe42aeaea08b742ce79c22fee04",
+  "modules": ["passport", "pickem"],
+  "capabilities": {
+    "mintCap": "0x52c2936c309f724183d9a0a58150886253cafdb26396bcd7700dacf1a68c521a",
+    "adminCap": "0x3275eea46ddd0dc013cba93d8ffac8a0f017b7f58ce3ee781a40b527f1e11dab",
+    "upgradeCap": "0x96b88e8c541bd4a26a01d71ee03525a18a3cb5e6da7f57a8f4a4fedbe843bf04"
+  },
+  "explorer": {
+    "package": "https://suiscan.xyz/testnet/object/0x050064dae220d008d39bfab69d23c3b47c554fe42aeaea08b742ce79c22fee04",
+    "tx": "https://suiscan.xyz/testnet/tx/5AUTUi5Cz5E2xy8DgWEcbkgXGCArtGNvF6jwysPGyRSy"
+  }
+}

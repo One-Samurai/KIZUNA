@@ -1,0 +1,10 @@
+tasks/progress.md
+tasks/lessons.md
+node_modules
+.next
+out
+dist
+build
+.env*.local
+.DS_Store
+*.tsbuildinfo

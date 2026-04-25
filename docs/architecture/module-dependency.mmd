@@ -1,0 +1,16 @@
+graph TD
+    pickem[kizuna::pickem] -->|public package add_xp| passport[kizuna::passport]
+    pickem --> clock[sui::clock::Clock]
+    pickem --> table[sui::table::Table]
+    pickem --> event[sui::event]
+    passport --> object[sui::object]
+    passport --> tx[sui::tx_context]
+
+    subgraph Capabilities
+        MintCap
+        AdminCap
+        UpgradeCap
+    end
+
+    MintCap -.->|gates| passport
+    AdminCap -.->|gates create/settle| pickem

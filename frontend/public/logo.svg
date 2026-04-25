@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#020617" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+    
+    <!-- Sui Blue Gradient -->
+    <linearGradient id="suiBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ca2ff" />
+      <stop offset="100%" stop-color="#2a75d3" />
+    </linearGradient>
+    
+    <!-- ONE/Samurai Red Gradient -->
+    <linearGradient id="samuraiRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff3b3b" />
+      <stop offset="100%" stop-color="#b90000" />
+    </linearGradient>
+
+    <!-- Glow Effect -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    
+    <!-- Subtle Glow for text -->
+    <filter id="textGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="100%" height="100%" fill="url(#bgGrad)" />
+
+  <!-- Outer Ring: Hexagon representing Blockchain/Sui -->
+  <g transform="translate(400, 340)">
+    <polygon points="0,-220 190.5,-110 190.5,110 0,220 -190.5,110 -190.5,-110" 
+             fill="none" stroke="url(#suiBlue)" stroke-width="4" opacity="0.3" filter="url(#glow)"/>
+    <polygon points="0,-200 173.2,-100 173.2,100 0,200 -173.2,100 -173.2,-100" 
+             fill="none" stroke="url(#suiBlue)" stroke-width="12" filter="url(#glow)"/>
+             
+    <!-- Corner Nodes representing Blockchain nodes/Web3 -->
+    <circle cx="0" cy="-200" r="14" fill="#4ca2ff" filter="url(#glow)"/>
+    <circle cx="173.2" cy="-100" r="10" fill="#4ca2ff" />
+    <circle cx="173.2" cy="100" r="10" fill="#4ca2ff" />
+    <circle cx="0" cy="200" r="14" fill="#4ca2ff" filter="url(#glow)"/>
+    <circle cx="-173.2" cy="100" r="10" fill="#4ca2ff" />
+    <circle cx="-173.2" cy="-100" r="10" fill="#4ca2ff" />
+
+    <!-- Inner Circle representing Enso/Japan/ONE Championship -->
+    <circle cx="0" cy="0" r="140" fill="none" stroke="url(#samuraiRed)" stroke-width="10" stroke-dasharray="30 15" filter="url(#glow)"/>
+    
+    <!-- Center Kanji: 絆 (Kizuna) -->
+    <!-- Using standard Japanese font stack, sizing it perfectly -->
+    <text x="0" y="55" font-family="'Noto Sans JP', 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'Meiryo', sans-serif" font-size="160" font-weight="900" fill="#ffffff" text-anchor="middle" filter="url(#textGlow)">絆</text>
+  </g>
+
+  <!-- Title: KIZUNA -->
+  <text x="400" y="660" font-family="'Inter', 'Montserrat', 'Helvetica Neue', sans-serif" font-size="72" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="20" filter="url(#textGlow)">KIZUNA</text>
+  
+  <!-- Subtitle: FAN PASSPORT -->
+  <text x="400" y="720" font-family="'Inter', 'Montserrat', 'Helvetica Neue', sans-serif" font-size="28" font-weight="600" fill="url(#suiBlue)" text-anchor="middle" letter-spacing="10">FAN PASSPORT</text>
+
+  <!-- Bottom Accent Line -->
+  <line x1="300" y1="760" x2="500" y2="760" stroke="url(#samuraiRed)" stroke-width="6" filter="url(#glow)" stroke-linecap="round" />
+</svg>
