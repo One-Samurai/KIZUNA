@@ -32,13 +32,13 @@ export default function Home() {
   return (
     <div className="space-y-24">
       {/* HERO */}
-      <section className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
+      <section className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(360px,460px)]">
         <div className="min-w-0 space-y-7">
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-kin/60" />
             <p className="eyebrow">絆 · Honor Ledger · ONE Samurai</p>
           </div>
-          <h1 className="h-display text-[56px] leading-[0.94] sm:text-[68px] xl:text-[84px]">
+          <h1 className="h-display text-[48px] leading-[0.94] sm:text-[60px] xl:text-[72px]">
             Soulbound<br />
             <span className="text-kin">proof of fandom.</span>
           </h1>

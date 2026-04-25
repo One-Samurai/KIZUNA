@@ -102,7 +102,9 @@ function MatchCard({
   const client = useSuiClient();
   const qc = useQueryClient();
   const { mutate: signAndExecute, isPending } = useSignAndExecuteTransaction();
-  const { data: hasVoted } = useHasVoted(match.id);
+  const { data: voteData } = useHasVoted(match.id);
+  const hasVoted = voteData?.voted ?? false;
+  const userPick = voteData?.pick ?? null;
   const { data: hasClaimed } = useHasClaimed(match.id);
   const [err, setErr] = useState<string | null>(null);
   const [justVoted, setJustVoted] = useState<Choice | null>(null);
@@ -154,9 +156,17 @@ function MatchCard({
       </header>
 
       <div className="flex flex-1 flex-col p-5">
-        <h2 className="h-display text-2xl leading-[1.05] text-ink">
-          {match.fighterA}<br /><span className="text-muted">vs</span> {match.fighterB}
-        </h2>
+        <div className="space-y-1">
+          <h2 className="h-display text-2xl leading-[1.05] text-ink text-left break-words">
+            {match.fighterA}
+          </h2>
+          <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-vermillion/80 text-center">
+            — vs —
+          </p>
+          <h2 className="h-display text-2xl leading-[1.05] text-ink text-right break-words">
+            {match.fighterB}
+          </h2>
+        </div>
 
         <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/70">
           {settled
@@ -173,13 +183,13 @@ function MatchCard({
                 disabled={!passportId || isPending || voted}
                 onClick={() => vote(Choice.FighterA)}
                 label={match.fighterA}
-                picked={justVoted === Choice.FighterA}
+                picked={justVoted === Choice.FighterA || userPick === 0}
               />
               <PickButton
                 disabled={!passportId || isPending || voted}
                 onClick={() => vote(Choice.FighterB)}
                 label={match.fighterB}
-                picked={justVoted === Choice.FighterB}
+                picked={justVoted === Choice.FighterB || userPick === 1}
               />
             </div>
           )}
@@ -234,10 +244,10 @@ function PickButton({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`group rounded-sm border px-4 py-3 text-left transition disabled:opacity-40 ${
+      className={`group rounded-sm border px-4 py-3 text-left transition disabled:cursor-not-allowed ${
         picked
-          ? 'border-sui bg-sui/15 text-sui'
-          : 'border-line bg-paper2 text-ink hover:border-sui/60 hover:bg-paper/60'
+          ? 'border-sui/60 bg-sui/10 text-ink/80'
+          : 'border-line bg-paper2 text-ink/45 grayscale hover:grayscale-0 hover:border-sui/60 hover:bg-paper/60 hover:text-ink disabled:hover:grayscale disabled:hover:text-ink/45 disabled:hover:border-line disabled:hover:bg-paper2 disabled:opacity-60'
       }`}
     >
       <p className="font-mono text-[9px] uppercase tracking-[0.22em] opacity-70">▸ Pick</p>

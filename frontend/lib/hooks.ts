@@ -90,21 +90,24 @@ export function useHasVoted(matchId: string | undefined) {
   return useQuery({
     queryKey: ['hasVoted', matchId, account?.address],
     enabled: !!matchId && !!account,
-    queryFn: async (): Promise<boolean> => {
+    queryFn: async (): Promise<{ voted: boolean; pick: 0 | 1 | null }> => {
       // Use dynamic field lookup on the votes Table.
       // Match.votes: Table<address, u8>. DF key type is `address`.
       try {
         const obj = await client.getObject({ id: matchId!, options: { showContent: true } });
         const f = (obj.data?.content as any)?.fields;
         const votesTableId = f?.votes?.fields?.id?.id;
-        if (!votesTableId) return false;
+        if (!votesTableId) return { voted: false, pick: null };
         const df = await client.getDynamicFieldObject({
           parentId: votesTableId,
           name: { type: 'address', value: account!.address },
         });
-        return !df.error && !!df.data;
+        if (df.error || !df.data) return { voted: false, pick: null };
+        const raw = (df.data.content as any)?.fields?.value;
+        const pick = raw === 0 || raw === '0' ? 0 : raw === 1 || raw === '1' ? 1 : null;
+        return { voted: true, pick };
       } catch {
-        return false;
+        return { voted: false, pick: null };
       }
     },
   });
