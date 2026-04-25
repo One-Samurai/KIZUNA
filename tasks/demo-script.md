@@ -16,7 +16,7 @@
 
 `[Click into landing — show "Honor Ledger / Fight Card / Honor Roll" tiles]`
 
-> "KIZUNA Fan Passport fixes that. One soulbound pass. One on-chain record. Earn it by being right, not by being loud."
+> "KIZUNA Fan Passport fixes that. One soulbound pass. One on-chain record."
 
 ---
 
@@ -24,11 +24,11 @@
 
 `[Hover the 5-step Tier Ladder: Rookie → Samurai → Veteran → Elite → Legend]`
 
-> "Every fan mints a non-transferable passport. Predict matches on the Fight Card, win XP, climb tiers — Rookie through Legend. Your record is permanent, public, and yours. Sponsors, clubs, and communities can finally tell a real Day-One supporter from a drive-by follower."
+> "Predict matches on the Fight Card, win XP, and climb from Rookie to Legend. Your record is permanent and yours. Sponsors can finally tell a Day-One supporter from a drive-by follower."
 
 `[Show two CTAs: Connect Wallet / Sign in with Google]`
 
-> "And to onboard the ninety-five percent of fans who've never touched a wallet — we use zkLogin. Sign in with Google. That's it. No seed phrase, no extension, no excuses."
+> "To onboard the ninety-five percent of fans without a crypto wallet, we use zkLogin. Sign in with Google. No seed phrases, no extensions."
 
 ---
 
@@ -36,55 +36,51 @@
 
 `[Click "Sign in with Google" → Enoki popup → return]`
 
-> "Here's Alice. She's a casual fan. She clicks Google, picks her account — and she's on-chain. No keys, no jargon. Behind the scenes, Enoki derives her Sui address from a zero-knowledge proof of her OAuth token. Her email never touches the chain."
+> "Here's Ramon. He clicks Google, picks his account — and he's on-chain. Behind the scenes, Enoki derives his Sui address from his OAuth token. His email never touches the chain."
 
 `[Click "Mint Passport" → tx confirms → identity card appears on Passport page]`
 
-> "She mints her passport. Notice the parchment card — that's her Honor Ledger. Rookie tier, zero XP, holder address right there."
+> "He mints his passport. Notice the parchment card — his Honor Ledger."
 
 `[Click the card — it flips over revealing the holder's avatar portrait]`
 
-> "Tap it — the passport flips. Front shows the tier artwork; back carries her personal avatar and the full on-chain identity. Today we ship tier-based preset portraits; next iteration wires this to an AI fighter-portrait generator — prompt goes in, the image is stored on **Walrus**, Sui's native decentralised blob storage, and the blob ID lives on the passport itself. Fully on-chain avatar, no centralised CDN."
-
-`[Click the tier preview pills below the card, cycling Rookie → Samurai → Ronin → Shogun → Legend]`
-
-> "Different tiers unlock different fighter artwork — from rookie recruit all the way to legend."
+> "Tap it — the passport flips. Front shows the tier artwork; back carries his full on-chain identity. Soon, we'll integrate an AI generator storing portraits directly on **Walrus**, Sui's decentralised blob storage, entirely removing reliance on centralised CDNs."
 
 `[Navigate to Pick'em / Fight Card → open match → vote Team A]`
 
-> "She picks tonight's match. One tap, one signature — invisible, because zkLogin handles it. Her vote is now an immutable event on Sui."
+> "He picks tonight's match. One tap, one signature — invisible, because zkLogin handles it. His vote is now an immutable event on Sui."
 
-`[Switch to admin tab briefly → settle match → back to Alice]`
+`[Switch to admin tab briefly → settle match → back to Ramon]`
 
-> "Match settles. She got it right."
+> "Match settles. He got it right."
 
 `[Click "Claim XP" → tx → XP bar jumps +100 → toast "Tier up: Samurai"]`
 
-> "She claims her hundred XP. She's just promoted herself to **Samurai** — and every future sponsor, ticketing platform or community gate can read that on-chain, in milliseconds."
+> "He claims his hundred XP. He's just promoted himself to **Samurai** — and every future sponsor, ticketing platform or community gate can read that on-chain, in milliseconds."
 
 ---
 
 ## 02:00–03:00 — Path B: Wallet User & Leaderboard
 
-`[Disconnect → Connect Sui Wallet as different account "Bob"]`
+`[Disconnect → Connect Sui Wallet as different account "Cindy"]`
 
-> "Now Bob — a power user, prefers his own wallet. Same flow, same contract. The passport doesn't care how you authenticated."
+> "Now Cindy — a power user, prefers her own wallet. Same flow, same contract. The passport doesn't care how you authenticated."
 
 `[Open Fight Card → filter "Open" → vote on a second live match]`
 
-> "Bob's already Veteran tier. He's been picking for weeks. Watch the timer — picks lock at kickoff, no late entries, enforced in Move."
+> "Cindy's already Veteran tier. She's been picking for weeks. Watch the timer — picks lock at kickoff, no late entries, enforced in Move."
 
-`[Settle the match as admin → Bob claims]`
+`[Settle the match as admin → Cindy claims]`
 
 > "Settled. Claimed."
 
 `[Navigate to /leaderboard]`
 
-> "Here's the **Honor Roll** — top ten by XP, tier mix across all holders, total picks, hit rate. **Every figure here is aggregated from on-chain events.** No backend, no database, no trust required. If our servers vanished tonight, the leaderboard would still exist."
+> "Here's the **Honor Roll** — top ten by XP and hit rate. **Every figure here is aggregated directly from on-chain events.** No backend database required. If our servers vanished tonight, the leaderboard remains."
 
-`[Hover Bob's row — rank 3, 87% hit rate]`
+`[Hover Cindy's row — rank 3, 87% hit rate]`
 
-> "That number — eighty-seven percent — is verifiable proof Bob actually knows the sport. That's the credential clubs and sponsors have been missing."
+> "That eighty-seven percent hit rate is verifiable proof Cindy knows the sport. That's the credential clubs have been missing."
 
 ---
 
