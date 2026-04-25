@@ -198,19 +198,35 @@ function MatchCard({
               <div className="rounded-sm border border-line bg-paper/40 px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
                 ▸ You did not pick this bout
               </div>
-            ) : claimed ? (
-              <div className="rounded-sm border border-sage/40 bg-sage/10 px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-sage">
-                ✓ XP claimed
-              </div>
-            ) : (
-              <button
-                disabled={!passportId || isPending}
-                onClick={claim}
-                className="btn-primary w-full"
-              >
-                {isPending ? 'Claiming…' : `▸ Claim XP · +${match.baseXp.toString()} if right`}
-              </button>
-            )
+            ) : claimed ? (() => {
+              const myPick = justVoted ?? (userPick === 0 ? Choice.FighterA : userPick === 1 ? Choice.FighterB : null);
+              const won = myPick !== null && match.winner !== null && Number(myPick) === Number(match.winner);
+              return won ? (
+                <div className="rounded-sm border border-sage/40 bg-sage/10 px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-sage">
+                  ✓ XP claimed
+                </div>
+              ) : (
+                <div className="rounded-sm border border-line bg-paper/40 px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
+                  ✓ Honor recorded · participation logged
+                </div>
+              );
+            })() : (() => {
+              const myPick = justVoted ?? (userPick === 0 ? Choice.FighterA : userPick === 1 ? Choice.FighterB : null);
+              const won = myPick !== null && match.winner !== null && Number(myPick) === Number(match.winner);
+              return (
+                <button
+                  disabled={!passportId || isPending}
+                  onClick={claim}
+                  className={won ? 'btn-primary w-full' : 'btn-ghost w-full'}
+                >
+                  {isPending
+                    ? 'Claiming…'
+                    : won
+                    ? `▸ Claim XP · +${match.baseXp.toString()}`
+                    : '▸ Claim honored participation'}
+                </button>
+              );
+            })()
           )}
           {locked && !settled && (
             <div className="rounded-sm border border-line bg-paper/40 px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
