@@ -1,9 +1,35 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit';
+
+// Boot window: account appearances within this many ms of mount are treated
+// as autoConnect session restore, not a fresh login.
+const BOOT_WINDOW_MS = 2000;
+
+function usePostLoginRedirect() {
+  const account = useCurrentAccount();
+  const router = useRouter();
+  const prev = useRef<string | undefined>(undefined);
+  const bootedAt = useRef<number>(0);
+
+  useEffect(() => {
+    bootedAt.current = Date.now();
+  }, []);
+
+  useEffect(() => {
+    const addr = account?.address;
+    const wasEmpty = !prev.current;
+    prev.current = addr;
+
+    if (!addr || !wasEmpty) return;
+    if (Date.now() - bootedAt.current < BOOT_WINDOW_MS) return;
+
+    router.replace('/passport');
+  }, [account, router]);
+}
 
 const NAV = [
   { href: '/passport', label: 'Pass' },
@@ -50,6 +76,7 @@ function CopyAddressButton() {
 
 export function Nav() {
   const path = usePathname();
+  usePostLoginRedirect();
   return (
     <nav className="sticky top-0 z-30 border-b border-line bg-paper/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">

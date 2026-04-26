@@ -1,0 +1,7 @@
+[
+  { "email": "YourName@gmail.com",   "ticketId": "TKT-0001", "seat": "A12",   "eventId": "OSA-2026-01" },
+  { "email": "OneSamurai@gmail.com", "ticketId": "TKT-0002", "seat": "A13",   "eventId": "OSA-2026-01" },
+  { "email": "alice@example.com",    "ticketId": "TKT-0003", "seat": "B07",   "eventId": "OSA-2026-01" },
+  { "email": "bob@example.com",      "ticketId": "TKT-0004", "seat": "C21",   "eventId": "OSA-2026-01" },
+  { "email": "demo@kizuna.gg",       "ticketId": "TKT-0005", "seat": "VIP-3", "eventId": "OSA-2026-01" }
+]

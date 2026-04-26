@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMatches, useAdminCap, useMintCap } from '@/lib/hooks';
 import {
   buildCreateMatch,
@@ -40,7 +40,15 @@ export default function AdminPage() {
         </p>
       </header>
 
-      <Section title="Mint pass" enabled={!!mintCap} hint={mintCap ? `MintCap · ${mintCap.slice(0, 12)}…` : 'No MintCap in this wallet'}>
+      <Section
+        title="Pending applications"
+        enabled={!!mintCap}
+        hint={mintCap ? 'KYC verified by ticket email match' : 'MintCap required'}
+      >
+        <PendingApplications mintCapId={mintCap ?? undefined} />
+      </Section>
+
+      <Section title="Mint pass (manual)" enabled={!!mintCap} hint={mintCap ? `MintCap · ${mintCap.slice(0, 12)}…` : 'No MintCap in this wallet'}>
         <MintPassportForm mintCapId={mintCap ?? undefined} />
       </Section>
 
@@ -204,6 +212,118 @@ function Submit({ disabled, label }: { disabled: boolean; label: string }) {
     <button type="submit" disabled={disabled} className="btn-primary">
       {label}
     </button>
+  );
+}
+
+type PendingApp = {
+  address: string;
+  email: string;
+  displayName: string;
+  ticketId: string;
+  seat: string;
+  eventId: string;
+  ts: number;
+  status: 'pending' | 'minted' | 'rejected';
+};
+
+function PendingApplications({ mintCapId }: { mintCapId?: string }) {
+  const [apps, setApps] = useState<PendingApp[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState<string | null>(null); // address currently being processed
+  const [err, setErr] = useState<string | null>(null);
+  const [ok, setOk] = useState<string | null>(null);
+  const { mutate, isPending } = useSignAndExecuteTransaction();
+  const client = useSuiClient();
+
+  async function refresh() {
+    setLoading(true);
+    try {
+      const r = await fetch('/api/pending');
+      const j = await r.json();
+      setApps(j.applications ?? []);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { refresh(); }, []);
+
+  async function markStatus(address: string, status: 'minted' | 'rejected', txDigest?: string) {
+    await fetch('/api/pending', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ address, status, txDigest }),
+    });
+  }
+
+  function approve(app: PendingApp) {
+    if (!mintCapId) return;
+    setErr(null); setOk(null); setBusy(app.address);
+    const tx = buildMintPassport({ displayName: app.displayName, recipient: app.address, mintCapId });
+    mutate(
+      { transaction: tx },
+      {
+        onSuccess: async ({ digest }) => {
+          await client.waitForTransaction({ digest });
+          await markStatus(app.address, 'minted', digest);
+          setOk(`Minted to ${app.displayName} · ${digest.slice(0, 10)}…`);
+          await refresh();
+          setBusy(null);
+        },
+        onError: (e) => {
+          setErr(parseMoveAbort(e as Error));
+          setBusy(null);
+        },
+      },
+    );
+  }
+
+  async function reject(app: PendingApp) {
+    setBusy(app.address);
+    await markStatus(app.address, 'rejected');
+    await refresh();
+    setBusy(null);
+  }
+
+  if (loading) return <p className="text-sm text-muted">Loading queue…</p>;
+  if (apps.length === 0) return <p className="text-sm text-muted">No pending applications.</p>;
+
+  return (
+    <div className="space-y-3">
+      <ul className="divide-y divide-line">
+        {apps.map((app) => {
+          const isBusy = busy === app.address;
+          return (
+            <li key={app.address} className="flex flex-wrap items-center justify-between gap-3 py-3">
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-sm" style={{ fontWeight: 800 }}>{app.displayName}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                  {app.email} · {app.ticketId} · seat {app.seat}
+                </p>
+                <p className="font-mono text-[10px] text-muted">{app.address.slice(0, 12)}…{app.address.slice(-8)}</p>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <button
+                  onClick={() => approve(app)}
+                  disabled={!mintCapId || isBusy || isPending}
+                  className="btn-primary"
+                >
+                  {isBusy && isPending ? 'Minting…' : '▸ Approve & mint'}
+                </button>
+                <button
+                  onClick={() => reject(app)}
+                  disabled={isBusy}
+                  className="rounded-sm border border-line px-3 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted hover:border-vermillion/60 hover:text-vermillion"
+                >
+                  Reject
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <Feedback err={err} ok={ok} />
+    </div>
   );
 }
 

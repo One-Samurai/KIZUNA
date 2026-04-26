@@ -4,7 +4,7 @@ import { useMyPassport } from '@/lib/hooks';
 import { useMyTimeline } from '@/lib/stats';
 import { TIER_NAMES, TIER_THRESHOLDS, Tier } from '@kizuna/contracts';
 import { useCurrentAccount } from '@mysten/dapp-kit';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 function nextThreshold(tier: Tier): bigint | null {
   if (tier >= Tier.Legend) return null;
@@ -28,20 +28,7 @@ export default function PassportPage() {
   if (isLoading) return <p className="text-muted">Loading pass…</p>;
 
   if (!passport) {
-    return (
-      <section className="space-y-6">
-        <div className="flex items-center gap-3">
-          <span className="h-px w-10 bg-kin/60" />
-          <p className="eyebrow">Honor Ledger</p>
-        </div>
-        <h1 className="h-display text-6xl">No pass minted.</h1>
-        <p className="max-w-xl text-muted">
-          Request a soulbound pass from an operator, or visit{' '}
-          <a href="/admin" className="text-sui underline-offset-4 hover:underline">/admin</a> if
-          you hold the MintCap yourself.
-        </p>
-      </section>
-    );
+    return <ApplyPanel address={account?.address} />;
   }
 
   const displayTier = (previewTier ?? passport.tier) as Tier;
@@ -283,6 +270,162 @@ function Row({ label, value }: { label: string; value: string }) {
       <span className="text-muted">{label}</span>
       <span className="truncate text-ink">{value}</span>
     </div>
+  );
+}
+
+type ApplicationStatus = {
+  address: string;
+  email: string;
+  displayName: string;
+  ticketId: string;
+  seat: string;
+  status: 'pending' | 'minted' | 'rejected';
+  ts: number;
+};
+
+function ApplyPanel({ address }: { address?: string }) {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [existing, setExisting] = useState<ApplicationStatus | null>(null);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (!address) { setChecked(true); return; }
+    let cancelled = false;
+    fetch(`/api/apply?address=${address}`)
+      .then((r) => r.json())
+      .then((j) => { if (!cancelled) setExisting(j.application ?? null); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setChecked(true); });
+    return () => { cancelled = true; };
+  }, [address]);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!address) return;
+    setErr(null); setSubmitting(true);
+    try {
+      const res = await fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ address, email, displayName: name }),
+      });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j.error ?? 'Submission failed');
+      setExisting(j.application);
+    } catch (e: any) {
+      setErr(e.message ?? String(e));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (!address) {
+    return (
+      <section className="space-y-6">
+        <div className="flex items-center gap-3">
+          <span className="h-px w-10 bg-kin/60" />
+          <p className="eyebrow">Honor Ledger</p>
+        </div>
+        <h1 className="h-display text-6xl">Connect to apply.</h1>
+        <p className="max-w-xl text-muted">
+          Sign in with Google or connect a wallet to apply for your soulbound passport.
+        </p>
+      </section>
+    );
+  }
+
+  if (existing && existing.status !== 'rejected') {
+    const isPending = existing.status === 'pending';
+    return (
+      <section className="space-y-6">
+        <div className="flex items-center gap-3">
+          <span className="h-px w-10 bg-kin/60" />
+          <p className="eyebrow">Honor Ledger</p>
+        </div>
+        <h1 className="h-display text-6xl">
+          {isPending ? 'Application received.' : 'Pass minting…'}
+        </h1>
+        <div className="card max-w-xl space-y-3 p-6">
+          <Row label="Display name" value={existing.displayName} />
+          <Row label="Email" value={existing.email} />
+          <Row label="Ticket" value={`${existing.ticketId} · seat ${existing.seat}`} />
+          <Row label="Status" value={existing.status.toUpperCase()} />
+        </div>
+        <p className="max-w-xl text-sm text-muted">
+          {isPending
+            ? 'Operator will mint your soulbound pass shortly. Refresh this page after a minute.'
+            : 'If your pass does not appear after 30 seconds, refresh — RPC index can lag.'}
+        </p>
+      </section>
+    );
+  }
+
+  if (!checked) return <p className="text-muted">Checking application…</p>;
+
+  return (
+    <section className="space-y-8">
+      <header className="space-y-4">
+        <div className="flex items-center gap-3">
+          <span className="h-px w-10 bg-kin/60" />
+          <p className="eyebrow">Honor Ledger</p>
+        </div>
+        <h1 className="h-display text-5xl sm:text-6xl">Apply for your pass.</h1>
+        <p className="max-w-xl text-muted">
+          KIZUNA pairs your Google sign-in with the team&rsquo;s ticketing record.{' '}
+          <span className="text-ink/80">One ticket → one soulbound passport.</span> KYC stays
+          off-chain, your wallet stays private.
+        </p>
+      </header>
+
+      {existing?.status === 'rejected' && (
+        <div className="max-w-xl rounded-sm border border-vermillion/40 bg-vermillion/10 p-4 text-sm text-ink">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-vermillion">
+            ▸ Previous application rejected
+          </p>
+          <p className="mt-1 text-muted">
+            Submit a new application below — make sure the email matches a valid ticket.
+          </p>
+        </div>
+      )}
+
+      <form onSubmit={submit} className="card max-w-xl space-y-4 p-6">
+        <label className="block">
+          <span className="eyebrow-muted mb-1.5 block">Display name</span>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="your legal name (must match ticket KYC)"
+            className="input"
+            maxLength={32}
+            required
+          />
+        </label>
+        <label className="block">
+          <span className="eyebrow-muted mb-1.5 block">Ticket email</span>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="the email you used to buy the ticket"
+            type="email"
+            className="input"
+            required
+          />
+        </label>
+        <div className="rounded-sm border border-line bg-paper2 p-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+          Wallet · {address.slice(0, 8)}…{address.slice(-6)}
+        </div>
+        {err && <p className="text-sm text-vermillion">{err}</p>}
+        <button type="submit" disabled={submitting} className="btn-primary">
+          {submitting ? 'Submitting…' : '▸ Apply for passport'}
+        </button>
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
+          Demo tickets · YourName@gmail.com · OneSamurai@gmail.com
+        </p>
+      </form>
+    </section>
   );
 }
 
