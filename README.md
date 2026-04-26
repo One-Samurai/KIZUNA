@@ -19,6 +19,15 @@ The platform is designed with a modern, decentralised architecture leveraging th
 *   **Dynamic Evolution (Dynamic NFT)**: A fan's check-ins and prediction records are updated in real-time on their KIZUNA passport attributes. The asset "evolves" in tandem with the fan's engagement, unlocking exclusive privileges.
 *   **Cashless Pick'em Predictions**: A legally compliant prediction module that gamifies the fan experience without involving real-money gambling, accumulating non-transferable Honor XP.
 
+## Sybil Resistance & KYC Gate (Design Decision)
+
+Passports are minted **only** through an admin-held `MintCap`, not by user self-serve. This is deliberate, not a placeholder limitation:
+
+*   **Soulbound ≠ sybil-proof.** The `key`-only, no-`store` ability prevents *transfers* but does not prevent the same human from spinning up dozens of zkLogin or fresh wallet addresses and minting one passport per address. Without a mint-side gate, the leaderboard, XP economy, and "verifiable hit rate" credential all collapse into noise.
+*   **KYC / ticket binding lives off-chain, by design.** Real-world fan identity (U-NEXT account, ticket QR scanned at the venue, OAuth issuer whitelist) is verified by the operator before they call `mint`. The Move contract stays minimal and jurisdiction-neutral; the regulated step happens where regulation already operates.
+*   **Upgrade path is non-breaking.** `MintCap` is a capability object, not hard-coded admin logic. The roadmap replaces the operator step with a `mint_with_proof` entrypoint that verifies a zkLogin JWT and a ticket-NFT ownership proof on-chain, then burns the legacy `MintCap`. Existing passports, XP, and tiers are untouched.
+*   **Result:** one passport per real fan, a leaderboard sponsors can actually trust, and a credible "Day-One supporter vs. drive-by follower" credential — which is the entire commercial proposition.
+
 ## Roadmap
 
 *   **AI-Generated Fighter Portraits**: The passport card currently ships with tier-based preset portraits (Rookie / Samurai / Ronin / Shogun / Legend) and a flippable back face embedding the holder's personal avatar. The next iteration integrates a generative-image pipeline (e.g. FAL flux-schnell / Replicate SDXL) prompted by tier, streak and fighter affiliation. Generated portraits are persisted to **Walrus**, Sui's native decentralised blob storage, and the `blob_id` is written back to the Passport object — giving every fan a fully on-chain, non-transferable avatar with zero reliance on centralised CDNs.

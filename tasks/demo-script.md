@@ -90,6 +90,10 @@
 
 > "Under the hood: two Move modules. Passport is soulbound — `key` ability, no `store`, cannot be transferred, period. XP only flows through a package-private function, gated by a MintCap. Pick'em uses shared objects with a settle guard so a winner can never be overwritten. We've shipped twenty-four unit tests, eight red-team adversarial tests — access-control bypass, integer overflow, double-claim, all green."
 
+`[Briefly highlight the MintCap line on screen]`
+
+> "And one deliberate design call: minting is **operator-gated**, not self-serve. Soulbound stops transfers — it doesn't stop one person spinning up a hundred zkLogin addresses to farm XP and poison the leaderboard. The MintCap puts the KYC gate — ticket scan at the venue, U-NEXT account binding, Google issuer check — off-chain where it belongs, while the on-chain authority stays a single capability object we can later upgrade to a zk-proof-gated `mint_with_proof`. One pass per real fan. That's the credential clubs actually want."
+
 ---
 
 ## 03:30–04:00 — Vision & Close
@@ -126,3 +130,4 @@
 | Crypto onboarding 門檻 | 00:30–01:00, 01:00–02:00 | zkLogin (Google sign-in, no seed phrase) |
 | 忠誠粉絲零回饋 | 00:30–01:00, 03:30+ | Tier ladder + future utility (merch / DAO / gating) |
 | 缺乏可信粉絲 credential | 02:00–03:00 | Public hit rate + tier, verifiable on-chain |
+| Sybil / 假帳號灌水 leaderboard | 03:00–03:30 | MintCap-gated mint — operator binds passport to KYC/ticket off-chain; one pass per real fan |

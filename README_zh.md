@@ -12,6 +12,15 @@
 *   **無摩擦登入體驗 (zkLogin)**：透過 Sui zkLogin，日本粉絲只需使用 Google 或 LINE 等社交帳號即可無痕註冊，完全免除學習錢包私鑰的巨大門檻。
 *   **動態進化能力 (Dynamic NFT)**：粉絲的打卡、預測戰績能即時更新於 KIZUNA 通行證的屬性上，讓資產隨著粉絲的參與度「進化」，解鎖更多專屬權益。
 
+## 防 Sybil 與 KYC Gate（設計決策）
+
+Passport 必須透過 admin 持有的 `MintCap` 核發，不開放使用者自助 mint，這是刻意選擇：
+
+*   **Soulbound 防轉不防 sybil。** `key` 無 `store` 只擋「轉移」，擋不住同一個人開十幾個 zkLogin / 新錢包地址各 mint 一張 passport。沒有 mint side 的 gate，leaderboard、XP 經濟、「可驗證命中率」credential 都會被假帳號稀釋。
+*   **KYC / 票根綁定設計上就放在鏈下。** 真實粉絲身份（U-NEXT 帳號、現場票根 QR、OAuth issuer 白名單）由 operator 驗證後才呼叫 `mint`。Move 合約保持精簡且不綁定特定司法管轄；受監管的步驟就留在原本就受監管的地方。
+*   **升級路徑不破壞既有狀態。** `MintCap` 是 capability object，不是寫死的 admin 邏輯。Roadmap 會替換成 `mint_with_proof` — 在鏈上驗證 zkLogin JWT + 票根 NFT 持有證明後自動 mint，再把舊 `MintCap` 燒掉。既有的 passport / XP / tier 完全不需遷移。
+*   **效果：** 一個真實粉絲一張 passport、贊助商可以信任的 leaderboard、可信的「Day-One 鐵粉 vs 路人粉」credential — 這就是商業價值的核心。
+
 ## 未來規劃 (Roadmap)
 *   **AI 生成拳手肖像**：目前 Passport 卡正面採用 tier-based 預設肖像（Rookie / Samurai / Ronin / Shogun / Legend），背面可翻卡展示粉絲個人 avatar。下一階段將接上生成式圖像管線（FAL flux-schnell / Replicate SDXL），依粉絲 tier、連勝紀錄與支持選手動態生成專屬拳手肖像；圖像透過 Sui 原生去中心化儲存 **Walrus** 持久化，並將 `blob_id` 寫回 Passport 物件，讓每位粉絲擁有完全上鏈、零依賴中心化 CDN 的個人肖像。
 *   **動態 Tier 藝術**：每次升階觸發重新生成，Passport 會隨著粉絲從 Rookie 進化到 Legend。
