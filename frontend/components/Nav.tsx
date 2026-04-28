@@ -36,6 +36,7 @@ const NAV = [
   { href: '/pickem', label: 'Picks' },
   { href: '/leaderboard', label: 'Ranks' },
   { href: '/shop', label: 'Shop' },
+  { href: '/insights', label: 'CRM' },
   { href: '/admin', label: 'Ops' },
 ];
 
