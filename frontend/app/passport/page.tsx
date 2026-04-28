@@ -19,6 +19,17 @@ export default function PassportPage() {
 
   const [previewTier, setPreviewTier] = useState<Tier | null>(null);
   const [flipped, setFlipped] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!account?.address) { setAvatarUrl(null); return; }
+    let cancelled = false;
+    fetch(`/api/apply?address=${account.address}`)
+      .then((r) => r.json())
+      .then((j) => { if (!cancelled) setAvatarUrl(j.application?.avatarDataUrl ?? null); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [account?.address]);
 
   const myItems = useMemo(() => {
     if (!timeline || !account) return [];
@@ -110,7 +121,7 @@ export default function PassportPage() {
               <div className="flip-face flip-back overflow-hidden rounded-card bg-sumi text-ink shadow-cardLg ring-1 ring-sui/30">
                 <div className="relative aspect-[3/4] overflow-hidden">
                   <img
-                    src="/avatar-sample.png"
+                    src={avatarUrl ?? '/avatar-sample.png'}
                     alt="Holder avatar"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
@@ -281,15 +292,39 @@ type ApplicationStatus = {
   seat: string;
   status: 'pending' | 'minted' | 'rejected';
   ts: number;
+  avatarDataUrl?: string;
 };
+
+const MAX_AVATAR_BYTES = 600 * 1024;
 
 function ApplyPanel({ address }: { address?: string }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [existing, setExisting] = useState<ApplicationStatus | null>(null);
   const [checked, setChecked] = useState(false);
+
+  function onPickAvatar(e: React.ChangeEvent<HTMLInputElement>) {
+    setErr(null);
+    const file = e.target.files?.[0];
+    if (!file) { setAvatarDataUrl(null); return; }
+    if (!file.type.startsWith('image/')) {
+      setErr('Avatar must be an image file');
+      e.target.value = '';
+      return;
+    }
+    if (file.size > MAX_AVATAR_BYTES) {
+      setErr(`Image too large (${(file.size / 1024).toFixed(0)} KB) — max 600 KB`);
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setAvatarDataUrl(typeof reader.result === 'string' ? reader.result : null);
+    reader.onerror = () => setErr('Failed to read image');
+    reader.readAsDataURL(file);
+  }
 
   useEffect(() => {
     if (!address) { setChecked(true); return; }
@@ -310,7 +345,7 @@ function ApplyPanel({ address }: { address?: string }) {
       const res = await fetch('/api/apply', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ address, email, displayName: name }),
+        body: JSON.stringify({ address, email, displayName: name, avatarDataUrl: avatarDataUrl ?? undefined }),
       });
       const j = await res.json();
       if (!res.ok) throw new Error(j.error ?? 'Submission failed');
@@ -413,6 +448,29 @@ function ApplyPanel({ address }: { address?: string }) {
             className="input"
             required
           />
+        </label>
+        <label className="block">
+          <span className="eyebrow-muted mb-1.5 block">Passport photo</span>
+          <div className="flex items-center gap-4">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-line bg-paper2">
+              {avatarDataUrl ? (
+                <img src={avatarDataUrl} alt="Avatar preview" className="h-full w-full object-cover" />
+              ) : (
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted">No photo</span>
+              )}
+            </div>
+            <div className="flex-1 space-y-1.5">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onPickAvatar}
+                className="block w-full text-xs text-muted file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-line file:bg-paper2 file:px-3 file:py-1.5 file:font-mono file:text-[10px] file:uppercase file:tracking-[0.2em] file:text-ink hover:file:border-sui/40"
+              />
+              <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted">
+                Optional · PNG/JPG/WEBP · max 600 KB · used on pass back
+              </p>
+            </div>
+          </div>
         </label>
         <div className="rounded-sm border border-line bg-paper2 p-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
           Wallet · {address.slice(0, 8)}…{address.slice(-6)}

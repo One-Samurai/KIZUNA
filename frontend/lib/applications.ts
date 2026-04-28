@@ -12,6 +12,7 @@ export type PendingApp = {
   ts: number;
   status: 'pending' | 'minted' | 'rejected';
   txDigest?: string;
+  avatarDataUrl?: string;
 };
 
 const TICKETS_PATH = path.join(process.cwd(), 'data', 'tickets.json');

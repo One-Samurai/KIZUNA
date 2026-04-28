@@ -35,6 +35,7 @@ const NAV = [
   { href: '/passport', label: 'Pass' },
   { href: '/pickem', label: 'Picks' },
   { href: '/leaderboard', label: 'Ranks' },
+  { href: '/shop', label: 'Shop' },
   { href: '/admin', label: 'Ops' },
 ];
 

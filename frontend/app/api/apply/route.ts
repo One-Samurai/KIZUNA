@@ -18,11 +18,18 @@ export async function POST(req: NextRequest) {
   const address = String(body.address ?? '').trim();
   const email = String(body.email ?? '').trim();
   const displayName = String(body.displayName ?? '').trim();
+  const avatarDataUrl = typeof body.avatarDataUrl === 'string' ? body.avatarDataUrl : undefined;
 
   if (!isAddress(address)) return NextResponse.json({ error: 'Invalid address' }, { status: 400 });
   if (!email.includes('@')) return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
   if (displayName.length < 2 || displayName.length > 32)
     return NextResponse.json({ error: 'Display name must be 2–32 chars' }, { status: 400 });
+  if (avatarDataUrl) {
+    if (!/^data:image\/(png|jpe?g|webp|gif);base64,/.test(avatarDataUrl))
+      return NextResponse.json({ error: 'Avatar must be a PNG/JPG/WEBP/GIF data URL' }, { status: 400 });
+    if (avatarDataUrl.length > 800_000)
+      return NextResponse.json({ error: 'Avatar too large (max ~600KB)' }, { status: 413 });
+  }
 
   const ticket = await findTicket(email);
   if (!ticket)
@@ -57,6 +64,7 @@ export async function POST(req: NextRequest) {
     eventId: ticket.eventId,
     ts: Date.now(),
     status: 'pending',
+    avatarDataUrl,
   };
   pending.push(entry);
   await savePending(pending);
