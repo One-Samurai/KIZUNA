@@ -14,8 +14,8 @@ import type {
 async function queryAll<T>(
   client: ReturnType<typeof useSuiClient>,
   type: string,
-): Promise<{ json: T; sender: string; timestampMs: string | null }[]> {
-  const out: { json: T; sender: string; timestampMs: string | null }[] = [];
+): Promise<{ json: T; sender: string; timestampMs: string | null; txDigest: string }[]> {
+  const out: { json: T; sender: string; timestampMs: string | null; txDigest: string }[] = [];
   let cursor: any = null;
   for (let i = 0; i < 10; i++) {
     const res = await client.queryEvents({
@@ -29,6 +29,7 @@ async function queryAll<T>(
         json: e.parsedJson as T,
         sender: e.sender,
         timestampMs: e.timestampMs ?? null,
+        txDigest: e.id.txDigest,
       });
     }
     if (!res.hasNextPage || !res.nextCursor) break;
@@ -149,6 +150,7 @@ export function useMyTimeline() {
         title: string;
         sub: string;
         addr: string;
+        txDigest: string;
       };
       const items: Item[] = [];
       for (const m of minted) {
@@ -158,6 +160,7 @@ export function useMyTimeline() {
           title: 'PASSPORT MINTED',
           sub: `${m.json.display_name} · joined archive`,
           addr: m.json.recipient,
+          txDigest: m.txDigest,
         });
       }
       for (const v of votes) {
@@ -167,6 +170,7 @@ export function useMyTimeline() {
           title: 'VOTE CAST',
           sub: `Choice ${v.json.choice === 0 ? 'A' : 'B'} · ${v.json.match_id.slice(0, 10)}…`,
           addr: v.json.voter,
+          txDigest: v.txDigest,
         });
       }
       for (const c of claims) {
@@ -176,6 +180,7 @@ export function useMyTimeline() {
           title: c.json.correct ? 'XP CLAIMED — CORRECT' : 'XP CLAIMED — MISSED',
           sub: `+${c.json.xp_awarded} honor XP`,
           addr: c.json.voter,
+          txDigest: c.txDigest,
         });
       }
       for (const t of tierUps) {
@@ -185,6 +190,7 @@ export function useMyTimeline() {
           title: 'TIER UP',
           sub: `Reached tier ${t.json.new_tier}`,
           addr: '',
+          txDigest: t.txDigest,
         });
       }
       items.sort((a, b) => b.ts - a.ts);

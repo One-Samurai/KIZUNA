@@ -252,19 +252,27 @@ export default function PassportPage() {
                 <li className="py-6 text-sm text-muted">No moves yet — go cast picks.</li>
               )}
               {myItems.map((it, i) => (
-                <li key={i} className="flex items-start justify-between gap-6 py-4">
-                  <div className="flex items-start gap-3">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sui" />
-                    <div>
-                      <p className="font-display text-sm tracking-wide text-ink" style={{ fontWeight: 800 }}>
-                        {it.title}
-                      </p>
-                      <p className="mt-0.5 text-sm text-muted">{it.sub}</p>
+                <li key={i}>
+                  <a
+                    href={it.txDigest ? `https://suiscan.xyz/testnet/tx/${it.txDigest}` : undefined}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group flex items-start justify-between gap-6 py-4 transition hover:bg-paper/40 -mx-2 px-2 rounded-sm"
+                    title={it.txDigest ? `View tx ${it.txDigest.slice(0, 12)}… on Suiscan` : undefined}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sui" />
+                      <div>
+                        <p className="font-display text-sm tracking-wide text-ink group-hover:text-sui" style={{ fontWeight: 800 }}>
+                          {it.title} <span className="font-mono text-[10px] tracking-[0.22em] text-muted opacity-0 group-hover:opacity-100">↗</span>
+                        </p>
+                        <p className="mt-0.5 text-sm text-muted">{it.sub}</p>
+                      </div>
                     </div>
-                  </div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
-                    {it.ts ? new Date(it.ts).toLocaleString(undefined, { month: '2-digit', day: '2-digit' }) : '—'}
-                  </p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
+                      {it.ts ? new Date(it.ts).toLocaleString(undefined, { month: '2-digit', day: '2-digit' }) : '—'}
+                    </p>
+                  </a>
                 </li>
               ))}
             </ul>

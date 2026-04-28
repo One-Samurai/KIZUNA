@@ -109,6 +109,7 @@ function MatchCard({
   const [err, setErr] = useState<string | null>(null);
   const [justVoted, setJustVoted] = useState<Choice | null>(null);
   const [justClaimed, setJustClaimed] = useState(false);
+  const [voteDigest, setVoteDigest] = useState<string | null>(null);
   const claimed = hasClaimed || justClaimed;
 
   const lockMs = Number(match.lockedAtMs);
@@ -118,14 +119,14 @@ function MatchCard({
   const locked = bucket === 'locked';
   const voted = hasVoted || justVoted !== null;
 
-  const submit = (tx: any, after?: () => void) => {
+  const submit = (tx: any, after?: (digest: string) => void) => {
     setErr(null);
     signAndExecute(
       { transaction: tx },
       {
         onSuccess: async ({ digest }) => {
           await client.waitForTransaction({ digest });
-          after?.();
+          after?.(digest);
           qc.invalidateQueries({ queryKey: ['hasVoted'] });
           qc.invalidateQueries({ queryKey: ['hasClaimed'] });
           qc.invalidateQueries({ queryKey: ['myPassport'] });
@@ -139,7 +140,7 @@ function MatchCard({
 
   const vote = (c: Choice) => {
     if (!passportId || voted) return;
-    submit(buildVote({ matchId: match.id, choice: c as 0 | 1, passportId }), () => setJustVoted(c));
+    submit(buildVote({ matchId: match.id, choice: c as 0 | 1, passportId }), (digest) => { setJustVoted(c); setVoteDigest(digest); });
   };
   const claim = () => {
     if (!passportId || justClaimed) return;
@@ -238,7 +239,18 @@ function MatchCard({
         <div className="mt-3 min-h-[18px] space-y-1">
           {isPending && <p className="font-mono text-[10px] text-muted">submitting…</p>}
           {voted && !isPending && !claimed && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-sui">✓ pick recorded on-chain</p>
+            voteDigest ? (
+              <a
+                href={`https://suiscan.xyz/testnet/tx/${voteDigest}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block font-mono text-[10px] uppercase tracking-[0.22em] text-sui underline decoration-sui/40 underline-offset-2 hover:decoration-sui"
+              >
+                ✓ pick recorded on-chain ↗
+              </a>
+            ) : (
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-sui">✓ pick recorded on-chain</p>
+            )
           )}
           {err && <p className="text-sm text-vermillion">{err}</p>}
         </div>
