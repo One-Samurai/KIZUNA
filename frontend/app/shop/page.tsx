@@ -50,16 +50,7 @@ export default function ShopPage() {
     setTimeout(() => setToast(null), 3500);
   }
 
-  if (!account) {
-    return (
-      <section className="space-y-6">
-        <Header />
-        <div className="card p-10 text-muted">Connect a wallet to browse the shop.</div>
-      </section>
-    );
-  }
-
-  if (isLoading) return <p className="text-muted">Loading shop…</p>;
+  if (account && isLoading) return <p className="text-muted">Loading shop…</p>;
 
   return (
     <section className="space-y-10">
@@ -89,7 +80,9 @@ export default function ShopPage() {
             </>
           )}
         </div>
-        <span className="pill-ghost">Mock — no on-chain redeem yet</span>
+        <span className="pill-ghost">
+          {account ? 'Mock — no on-chain redeem yet' : 'Connect a wallet to redeem'}
+        </span>
       </div>
 
       {/* Filters */}
@@ -192,10 +185,14 @@ function RewardCard({
           }}
         />
         <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-paper/80 via-paper/0 to-paper/30" />
-        <span className="absolute left-3 top-3 z-[3] pill-ghost backdrop-blur">{reward.category}</span>
+        <span className="absolute left-3 top-3 z-[3] pill border border-line bg-paper/85 text-ink backdrop-blur">
+          {reward.category}
+        </span>
         <span
-          className={`absolute right-3 top-3 z-[3] backdrop-blur ${
-            reward.tierRequired >= Tier.Shogun ? 'pill-red' : 'pill-kin'
+          className={`absolute right-3 top-3 z-[3] pill backdrop-blur ${
+            reward.tierRequired >= Tier.Shogun
+              ? 'border border-vermillion/80 bg-paper/85 text-vermillion'
+              : 'border border-kin/80 bg-paper/85 text-kin'
           }`}
         >
           {tierLabel}+
